@@ -1,0 +1,22 @@
+---
+- hosts: instance
+  tasks:
+    - import_role:
+        name: nginx
+      vars:
+        nginx_modules:
+          50-mod-mail:
+            enabled: false
+          50-mod-test:
+            content: ""
+        nginx_vhosts:
+          example:
+        nginx_config_fragments:
+          maps: |
+            map $http_user_agent $mobile {
+              default       0;
+              "~Opera Mini" 1;
+            }
+        nginx_snippets:
+          logs: |
+            access_log /var/log/nginx/all.log;

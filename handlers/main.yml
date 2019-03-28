@@ -1,0 +1,16 @@
+---
+- name: Restart Nginx
+  service:
+    name: "{{ nginx_service }}"
+    state: restarted
+  register: _nginx_restarted
+  when: nginx_restart
+
+- name: Reload Nginx
+  service:
+    name: "{{ nginx_service }}"
+    state: reloaded
+  when: >
+    nginx_reload and
+    (_nginx_restarted is not defined or
+    _nginx_restarted is not changed)

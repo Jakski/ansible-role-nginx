@@ -1,0 +1,68 @@
+###
+# Package with Nginx
+nginx_package: nginx
+
+###
+# Nginx service name
+nginx_service: nginx
+
+###
+# Enable Nginx service
+nginx_enable: true
+
+###
+# Template for Nginx main configuration file
+nginx_config_template: nginx.j2
+
+###
+# Directory with configuration
+nginx_config_dir: /etc/nginx
+
+###
+# Remove unmanaged configuration fragments from conf.d
+nginx_manage_config_fragments: true
+
+###
+# Filename/content dictionary with configuration fragments for conf.d
+#
+# Extenstion .conf will be added automatically
+nginx_config_fragments: {}
+
+###
+# Filename/content dictionary with configuration snippets
+#
+# Extenstion .conf will be added automatically
+nginx_snippets: {}
+
+###
+# Filename/settings dictionary with virtual hosts
+#
+# Extenstion .conf will be added automatically
+nginx_vhosts: {}
+
+###
+# Template for virtual hosts
+nginx_vhost_template: vhost.j2
+
+###
+# Reload Nginx when necessary
+nginx_reload: true
+
+###
+# Restart Nginx when necessary
+nginx_restart: true
+
+###
+# Dictionary with extra modules configuration, e.g.:
+#
+# .. code-block:: yaml
+# 
+#    50-mod-stream:
+#      enabled: false
+#    50-mod-mail:
+#      dest: /usr/share/nginx/modules-available/mod-mail.conf
+nginx_modules: {}
+
+###
+# Remove unmanaged virtual hosts
+nginx_manage_vhosts: true
