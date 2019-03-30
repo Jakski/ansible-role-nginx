@@ -78,9 +78,6 @@
   register: _nginx_vhosts
   when: nginx_manage_vhosts
 
-- debug:
-    msg: "{{ nginx_vhosts.keys() }}"
-
 - name: Remove unmanaged vhosts
   file:
     path: "{{ item.path }}"
