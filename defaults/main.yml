@@ -41,10 +41,6 @@ nginx_snippets: {}
 nginx_vhosts: {}
 
 ###
-# Template for virtual hosts
-nginx_vhost_template: vhost.j2
-
-###
 # Reload Nginx when necessary
 nginx_reload: true
 

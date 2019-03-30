@@ -4,13 +4,19 @@
     - import_role:
         name: nginx
       vars:
+        nginx_server_names_hash_bucket_size: 128
         nginx_modules:
           50-mod-mail:
             enabled: false
           50-mod-test:
             content: ""
         nginx_vhosts:
-          example:
+          example1:
+            template: ./templates/test_vhost.j2
+            params:
+              server_name: www.test.local
+          example2:
+            template: ./templates/test_vhost.j2
         nginx_config_fragments:
           maps: |
             map $http_user_agent $mobile {

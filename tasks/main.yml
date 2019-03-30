@@ -78,6 +78,9 @@
   register: _nginx_vhosts
   when: nginx_manage_vhosts
 
+- debug:
+    msg: "{{ nginx_vhosts.keys() }}"
+
 - name: Remove unmanaged vhosts
   file:
     path: "{{ item.path }}"
@@ -91,14 +94,15 @@
 
 - name: Create virtual hosts
   template:
-    src: "{{ nginx_vhost_template }}"
+    src: "{{ template }}"
     dest: "{{ nginx_config_dir }}/sites-enabled/{{ name }}.conf"
     owner: root
     group: root
     mode: 0644
   vars:
     name: "{{ item.key }}"
-    config: "{{ item.value }}"
+    params: "{{ item.value.params | default({}) }}"
+    template: "{{ item.value.template | mandatory }}"
   loop: "{{ nginx_vhosts | dict2items }}"
   notify:
     - Reload Nginx
