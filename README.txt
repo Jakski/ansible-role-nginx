@@ -57,10 +57,6 @@ nginx_vhosts
 
    Extenstion .conf will be added automatically
 
-nginx_vhost_template
-
-   Template for virtual hosts
-
 nginx_reload
 
    Reload Nginx when necessary
