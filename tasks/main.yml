@@ -99,7 +99,7 @@
   vars:
     name: "{{ item.key }}"
     params: "{{ item.value.params | default({}) }}"
-    template: "{{ item.value.template | mandatory }}"
+    template: "{{ item.value.template | default('vhost.j2') }}"
   loop: "{{ nginx_vhosts | dict2items }}"
   notify:
     - Reload Nginx

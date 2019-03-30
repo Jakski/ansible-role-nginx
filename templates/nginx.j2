@@ -18,6 +18,7 @@ http {
 	types_hash_max_size {{ nginx_types_hash_max_size | default(2048) }};
 	include /etc/nginx/mime.types;
 	default_type {{ nginx_default_type | default("application/octet-stream") }};
+	ssl_protocols {{ nginx_ssl_protocols | default("TLSv1 TLSv1.1 TLSv1.2") }};
 	ssl_prefer_server_ciphers {{ nginx_ssl_prefer_server_ciphers | default("on") }};
 	access_log {{ nginx_access_log | default("/var/log/nginx/access.log") }};
 	error_log {{ nginx_error_log | default("/var/log/nginx/error.log") }};

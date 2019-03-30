@@ -12,11 +12,17 @@
             content: ""
         nginx_vhosts:
           example1:
-            template: ./templates/test_vhost.j2
             params:
-              server_name: www.test.local
+              listen:
+                - 80
+              server_names:
+                - www.test.local
           example2:
-            template: ./templates/test_vhost.j2
+            params:
+              listen:
+                - 80
+              server_names:
+                - _
         nginx_config_fragments:
           maps: |
             map $http_user_agent $mobile {

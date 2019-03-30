@@ -41,6 +41,12 @@ nginx_snippets: {}
 nginx_vhosts: {}
 
 ###
+# Default virtual host template
+#
+# You overwrite it per virtual host by using `template` key
+nginx_vhost_template: vhost.j2
+
+###
 # Reload Nginx when necessary
 nginx_reload: true
 
