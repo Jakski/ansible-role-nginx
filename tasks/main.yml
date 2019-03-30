@@ -39,6 +39,8 @@
     nginx_manage_config_fragments and
     (item.path | basename | regex_replace('(.*)\.conf$', '\\1')) not in nginx_config_fragments.keys()
   loop: "{{ _nginx_config_fragments.files }}"
+  loop_control:
+    label: "{{ item.path }}"
   notify:
     - Reload Nginx
 
@@ -67,6 +69,8 @@
     name: "{{ item.key }}"
     content: "{{ item.value }}"
   loop: "{{ nginx_snippets | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
   notify:
     - Reload Nginx
 
@@ -86,6 +90,8 @@
     nginx_manage_vhosts and
     (item.path | basename | regex_replace('(.*)\.conf$', '\\1')) not in nginx_vhosts.keys()
   loop: "{{ _nginx_vhosts.files }}"
+  loop_control:
+    label: "{{ item.path }}"
   notify:
     - Reload Nginx
 
@@ -101,6 +107,8 @@
     params: "{{ item.value.params | default({}) }}"
     template: "{{ item.value.template | default('vhost.j2') }}"
   loop: "{{ nginx_vhosts | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
   notify:
     - Reload Nginx
 
