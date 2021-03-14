@@ -1,132 +1,29 @@
 ---
 - name: Install Nginx
   apt:
-    name: "{{ nginx_package }}"
-    default_release: "{{ nginx_package_release | default(omit) }}"
+    name: "{{ nginx_packages }}"
+    default_release: "{{ nginx_packages_release | default(omit) }}"
     state: present
   notify:
     - Restart Nginx
 
-- name: "{{ nginx_enable | ternary('Enable', 'Disable') }} Nginx service"
+- name: Create configuration file
+  template:
+    src: "{{ nginx_config_template }}"
+    dest: "{{ nginx_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload Nginx
+
+- name: Configure Nginx service
   service:
     name: "{{ nginx_service }}"
     enabled: "{{ nginx_enable }}"
 
-- name: Create main configuration file
-  template:
-    src: "{{ nginx_config_template }}"
-    dest: "{{ nginx_config_dir }}/nginx.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - Reload Nginx
-
-- name: Find existing configuration fragments
-  find:
-    path: "{{ nginx_config_dir }}/conf.d"
-    recurse: false
-    file_type: any
-    patterns: "*.conf"
-  register: _nginx_config_fragments
-  when: nginx_manage_config_fragments
-
-- name: Remove unmanaged configuration fragments
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  when: >
-    nginx_manage_config_fragments and
-    (item.path | basename | regex_replace('(.*)\.conf$', '\\1')) not in nginx_config_fragments.keys()
-  loop: "{{ _nginx_config_fragments.files }}"
-  loop_control:
-    label: "{{ item.path }}"
-  notify:
-    - Reload Nginx
-
-- name: Create configuration fragments
-  copy:
-    content: "{{ content }}"
-    dest: "{{ nginx_config_dir }}/conf.d/{{ name }}.conf"
-    owner: root
-    group: root
-    mode: 0644
-  vars:
-    name: "{{ item.key }}"
-    content: "{{ item.value }}"
-  loop: "{{ nginx_config_fragments | dict2items }}"
-  notify:
-    - Reload Nginx
-
-- name: Create configuration snippets
-  copy:
-    content: "{{ content }}"
-    dest: "{{ nginx_config_dir }}/snippets/{{ name }}.conf"
-    owner: root
-    group: root
-    mode: 0644
-  vars:
-    name: "{{ item.key }}"
-    content: "{{ item.value }}"
-  loop: "{{ nginx_snippets | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
-  notify:
-    - Reload Nginx
-
-- name: Find existing virtual hosts
-  find:
-    path: "{{ nginx_config_dir }}/sites-enabled"
-    recurse: false
-    file_type: any
-  register: _nginx_vhosts
-  when: nginx_manage_vhosts
-
-- name: Remove unmanaged vhosts
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  when: >
-    nginx_manage_vhosts and
-    (item.path | basename | regex_replace('(.*)\.conf$', '\\1')) not in nginx_vhosts.keys()
-  loop: "{{ _nginx_vhosts.files }}"
-  loop_control:
-    label: "{{ item.path }}"
-  notify:
-    - Reload Nginx
-
-- name: Create virtual hosts
-  template:
-    src: "{{ template }}"
-    dest: "{{ nginx_config_dir }}/sites-enabled/{{ name }}.conf"
-    owner: root
-    group: root
-    mode: 0644
-  vars:
-    name: "{{ item.key }}"
-    params: "{{ item.value.params | default({}) }}"
-    template: "{{ item.value.template | default('vhost.j2') }}"
-  loop: "{{ nginx_vhosts | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
-  notify:
-    - Reload Nginx
-
-- name: Create module configuration files
-  copy:
-    content: "{{ item.value.content }}"
-    dest: "{{ nginx_config_dir }}/modules-enabled/{{ item.key }}.conf"
-    owner: root
-    group: root
-    mode: 0644
-  when: "item.value.enabled | default(True)"
-  loop: "{{ nginx_modules | dict2items }}"
-  notify:
-    - Reload Nginx
-
-- name: Remove disabled module configuration files
-  file:
-    path: "{{ nginx_config_dir }}/modules-enabled/{{ item.key }}.conf"
-    state: absent
-  when: "not item.value.enabled | default(True)"
-  loop: "{{ nginx_modules | dict2items }}"
+- name: Set Nginx service state
+  service:
+    name: "{{ nginx_service }}"
+    state: "{{ nginx_state }}"
+  register: _nginx_service_state

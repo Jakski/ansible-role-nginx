@@ -1,4 +1,5 @@
 docs
+molecule/default/plugins
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

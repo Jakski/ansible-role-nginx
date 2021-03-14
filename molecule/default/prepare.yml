@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: Install Python APT
+      apt:
+        name: python3-apt
+        update_cache: true
+        install_recommends: false

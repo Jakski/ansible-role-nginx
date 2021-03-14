@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: Install tools required by tests
+      apt:
+        name:
+          - netcat-openbsd
+          - wget
+        install_recommends: false
+
+    - name: Test infrastructure
+      script: verify.sh
+      args:
+        executable: /bin/bash

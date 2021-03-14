@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: "nginx"
+  namespace: "jakski"
   description: Role to setup Nginx
   author: "Jakub Pieńkowski"
   license: MIT

@@ -3,32 +3,25 @@ ansible-role-nginx
 
 Role to setup Nginx.
 
-Default configuration templates are hardcoded to make Nginx just work out of the
-box. You will have to provide your own, if you plan to use this role.
-
 Variables
 --------------------------------------------------------------------------------
 
-nginx_package_release
+nginx_packages_release
 
-   Package default release
+   Packages default release
 
 .. autoyaml:: defaults/main.yml
 
 Examples
 --------------------------------------------------------------------------------
 
-.. literalinclude:: molecule/default/playbook.yml
+.. literalinclude:: molecule/default/converge.yml
    :language: yaml
 
-Documentation
+Updating README
 --------------------------------------------------------------------------------
 
-Compile::
+::
 
-   $ pip3 install -r requirements.txt
-   $ make man
+   $ sphinx-build -b text . docs && cp docs/docs.txt README.txt
 
-View::
-
-   $ man ./docs/man/ansible-role-nginx.1
